@@ -1,8 +1,10 @@
 plugins = dict()
 
-def command(func):
-    plugins[func.__name__] = func
-    return func
+def command(name):
+    def command_wrap(func):
+        plugins[name] = func
+        return func
+    return command_wrap
 
 def scan(namespace):
     """ Scans the namespace for modules and imports them, to activate decorator

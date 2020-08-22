@@ -51,7 +51,7 @@ class Swiatlowid(irc.bot.SingleServerIRCBot):
         cmd_list = cmdline.split()
         cmd = cmd_list[0]
 
-        if cmd in plugin.plugins:
+        if cmd in plugin.plugins.keys():
             cmd_func = plugin.plugins[cmd]
             cmd_func(self, c, e, cmd_list[1:])
         else:
