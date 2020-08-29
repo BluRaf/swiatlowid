@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+import sys
+import argparse
+
 import irc.bot
 import irc.strings
 from irc.client import ip_numstr_to_quad, ip_quad_to_numstr
@@ -59,25 +62,28 @@ class Swiatlowid(irc.bot.SingleServerIRCBot):
 
 
 def main():
-    import sys
-    plugin.scan('swiatlowid.plugins')
+    parser = argparse.ArgumentParser(description="IRC bot.")
+    parser.add_argument("server", help="server[:port]")
+    parser.add_argument("channel", help="channel on which bot will operate")
+    parser.add_argument("nickname", help="nickname to be used by bot")
 
-    if len(sys.argv) != 4:
-        print("Usage: {} <server[:port]> <channel> <nickname>".format("swiatlowid"))
-        sys.exit(1)
+    args = parser.parse_args()
 
-    s = sys.argv[1].split(":", 1)
+    s = args.server.split(":", 1)
     server = s[0]
     if len(s) == 2:
         try:
             port = int(s[1])
         except ValueError:
             print("Error: Erroneous port.")
+            parser.print_help()
             sys.exit(1)
     else:
         port = 6667
-    channel = sys.argv[2]
-    nickname = sys.argv[3]
+    channel = args.channel
+    nickname = args.nickname
+
+    plugin.scan('swiatlowid.plugins')
 
     bot = Swiatlowid(channel, nickname, server, port)
     bot.start()
