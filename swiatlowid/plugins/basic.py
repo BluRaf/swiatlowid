@@ -1,18 +1,32 @@
 from swiatlowid import plugin
 from time import sleep
+import platform
+import importlib.metadata
 
 @plugin.command('pomoc')
 def help(bot, client, event, args):
     """Właśnie ją czytasz"""
     if len(args) == 1:
         if args[0] in plugin.plugins.keys():
-            client.notice(event.source.nick, "{}: {}".format(args[0], plugin.plugins[args[0]].__doc__))
+            client.notice(event.source.nick,
+                          "{}: {}".format(args[0],
+                                          plugin.plugins[args[0]].__doc__))
         else:
             client.notice(event.source.nick, "help: nieznana komenda")
     else:
         for cmd in plugin.plugins:
-            client.notice(event.source.nick, "{}: {}".format(cmd, plugin.plugins[cmd].__doc__))
+            client.notice(event.source.nick,
+                          "{}: {}".format(cmd, plugin.plugins[cmd].__doc__))
             sleep(1.2)
+
+@plugin.command('przedstawsie')
+def about(bot, client, event, args):
+    """Listuje informacje o bocie"""
+    client.privmsg(bot.channel,
+                   "Światłowid {}, jaraco/irc {}, Python {} @ {}".format(
+                   bot.version,
+                   importlib.metadata.version("irc"),
+                   platform.python_version(), platform.platform()))
 
 @plugin.command('jeszczejak')
 def ofcourse(bot, client, event, args):
@@ -22,21 +36,28 @@ def ofcourse(bot, client, event, args):
 @plugin.command('elementy')
 def elements(bot, client, event, args):
     """Listuje argumenty podane funkcji"""
-    client.privmsg(bot.channel, "{}: {}".format(event.source.nick, str(args).strip('[]')))
+    client.privmsg(bot.channel, "{}: {}".format(event.source.nick,
+                                                str(args).strip('[]')))
 
 @plugin.command('rozlacz')
 def disconnect(bot, client, event, args):
     """Rozłącza bota z serwerem"""
-    bot.disconnect()
+    bot.disconnect("Zaraz wracam")
 
 @plugin.command('padnij')
 def die(bot, client, event, args):
     """Wyłącza bota"""
-    bot.die()
+    bot.die("To ja uciekam")
+
+@plugin.command('wolaj')
+def everyone(bot, client, event, args):
+    """Woła wszystkich dostępnych na kanale"""
+    client.privmsg(bot.channel, ", ".join(bot.channels[bot.channel].users()))
 
 @plugin.command('statystyki')
 def stats(bot, client, event, args):
     """Zwraca statystyki kanału"""
+    nick = event.source.nick
     for chname, chobj in bot.channels.items():
         client.notice(nick, "Kanał: " + chname)
         users = sorted(chobj.users())

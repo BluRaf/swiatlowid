@@ -1,1 +1,2 @@
 irc
+version-query
