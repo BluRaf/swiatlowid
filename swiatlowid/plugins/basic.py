@@ -23,10 +23,10 @@ def help(bot, client, event, args):
 def about(bot, client, event, args):
     """Listuje informacje o bocie"""
     client.privmsg(bot.channel,
-                   "Światłowid {}, jaraco/irc {}, Python {} @ {}".format(
+                   "Światłowid {}, jaraco/irc {}, Python {}".format(
                    bot.version,
                    importlib.metadata.version("irc"),
-                   platform.python_version(), platform.platform()))
+                   platform.python_version()))
 
 @plugin.command('elementy')
 def elements(bot, client, event, args):
