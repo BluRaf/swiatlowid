@@ -1,15 +1,14 @@
-FROM python:3.8-slim
+FROM python:3.8-alpine
 
-RUN apt update
-RUN apt install -y git
+RUN apk add --no-cache git
 
-RUN useradd --create-home bot
-USER bot
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
 
-ADD . /home/bot/swiatlowid
-WORKDIR /home/bot/swiatlowid
+ADD . /home/appuser/swiatlowid
+WORKDIR /home/appuser/swiatlowid
 
-ENV PATH=/home/bot/.local/bin:$PATH
+ENV PATH=/home/appuser/.local/bin:$PATH
 
 RUN pip install --user -r requirements.txt
 
